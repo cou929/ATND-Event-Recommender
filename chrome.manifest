@@ -1,0 +1,6 @@
+content   atndevrecom                 chrome/content/
+skin      atndevrecom   classic/1.0   chrome/skin/
+locale    atndevrecom   en-US         chrome/locale/en-US/
+
+
+overlay   chrome://browser/content/browser.xul   chrome://atndevrecom/content/ff-overlay.xul
