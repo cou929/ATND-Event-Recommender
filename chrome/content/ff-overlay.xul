@@ -9,10 +9,6 @@
     <stringbundle id="atndevrecom-strings" src="chrome://atndevrecom/locale/overlay.properties"/>
   </stringbundleset>
 
-  <statusbar id="status-bar">
-    <image src="chrome://atndevrecom/skin/images/puzzle16.png" id="atndevrecom-icon" onclick="atndevrecom.show()" tooltiptext="aaaaaa" />
-  </statusbar>
-
   <popupset>
     <panel id="atndevrecom-popup-panel">
       <html:div id="atndevrecom-popup-div">

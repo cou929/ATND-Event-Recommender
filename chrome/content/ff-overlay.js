@@ -1,12 +1,20 @@
 var atndevrecom = {
   oldUri: null,
-  today: null,
   events: {},
-  
+
+  // cache
+  today: null,
+  statusbar: null,
+  activeIconImage: null,
+  inactiveIconImage: null,
+    
   //// firefox specific functions
   init: function() {
     gBrowser.addProgressListener(atndevrecom.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
     atndevrecom.today = new Date();
+    atndevrecom.statusbar = document.getElementById('status-bar');
+    atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png');
+    atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
   },
 
   uninit: function() {
@@ -64,12 +72,42 @@ var atndevrecom = {
     gBrowser.selectedTab = gBrowser.addTab(uri);
   },
 
+  activate: function() {
+    atndevrecom.removeIcon();
+    atndevrecom.statusbar.appendChild(atndevrecom.activeIconImage);
+  },
+
+  deactivate: function() {
+    atndevrecom.removeIcon();
+    atndevrecom.statusbar.appendChild(atndevrecom.inactiveIconImage);
+  },
+
+  constructIconImage: function(src) {
+    var iconImage = document.createElement('image');
+    iconImage.setAttribute('src', src);
+    iconImage.setAttribute('id', 'atndevrecom-icon');
+    iconImage.setAttribute('onclick', "atndevrecom.show()");
+    iconImage.setAttribute('tooltiptext', 'fix me later');
+    return iconImage;
+  },
+
+  removeIcon: function() {
+    var statusbarIconImage = document.getElementById('atndevrecom-icon');
+    if (statusbarIconImage) {
+      atndevrecom.statusbar.removeChild(statusbarIconImage);
+    }
+  },
+
   //// extension specific functions
   checkCurrentUri: function(currentUri) {
     atndevrecom.clearEventList();
     var res = currentUri.match(/^http:\/\/atnd\.org\/events\/([0-9]+)/i);
-    if (res)
+    if (res) {
       atndevrecom.getUserList(res[1]);
+      atndevrecom.activate();
+    } else {
+      atndevrecom.deactivate();
+    }
   },
 
   getUserList: function(eventId) {
