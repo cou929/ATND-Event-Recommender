@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://atndevrecom/skin/overlay.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://atndevrecom/locale/overlay.dtd">
-<overlay id="atndevrecom-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<overlay id="atndevrecom-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
   <script src="overlay.js"/>
   <script src="ff-overlay.js"/>
 
@@ -9,7 +9,15 @@
     <stringbundle id="atndevrecom-strings" src="chrome://atndevrecom/locale/overlay.properties"/>
   </stringbundleset>
 
+  <statusbar id="status-bar">
+    <image src="chrome://atndevrecom/skin/images/puzzle16.png" id="atndevrecom-icon" onclick="atndevrecom.show()" tooltiptext="aaaaaa" />
+  </statusbar>
 
-
+  <popupset>
+    <panel id="atndevrecom-popup-panel">
+      <html:div id="atndevrecom-popup-div">
+      </html:div>
+    </panel>
+  </popupset>
 
 </overlay>
