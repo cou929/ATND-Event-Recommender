@@ -1,6 +1,7 @@
 var atndevrecom = {
   oldUri: null,
   events: {},
+  isActive: false,
 
   // cache
   today: null,
@@ -50,8 +51,9 @@ var atndevrecom = {
 
   show: function() {
     atndevrecom.clearPanel();
-    var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml">'
-               + '<ul>';
+    if (!atndevrecom.isActive) return;
+
+    var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><ul>';
     for (var i in atndevrecom.events)
       html += '<li><span onclick="atndevrecom.openNewTab(\'' + atndevrecom.events[i].event_url + '\')">'
         + atndevrecom.events[i].title + '</span></li>';
@@ -105,8 +107,10 @@ var atndevrecom = {
     if (res) {
       atndevrecom.getUserList(res[1]);
       atndevrecom.activate();
+      atndevrecom.isActive = true;
     } else {
       atndevrecom.deactivate();
+      atndevrecom.isActive = false;
     }
   },
 
