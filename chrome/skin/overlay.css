@@ -1,22 +1,47 @@
-/* This is just an example.  You shouldn't do this. */
-#atndevrecom-hello
-{
-  color: red ! important;
+#atndevrecom-popup-panel {
+	  -moz-appearance: none;
+	  -moz-border-radius-topleft: 20px;
+	  -moz-border-radius-topright: 20px;
+    padding: 1px;
 }
-#atndevrecom-toolbar-button
-{
-  list-style-image: url("chrome://atndevrecom/skin/toolbar-button.png");
-  -moz-image-region: rect(0px 24px 24px 0px);
+
+#atndevrecom-popup-div {
+	  -moz-border-radius-topleft: 20px;
+	  -moz-border-radius-topright: 20px;
+    font: bold 11px/20px Verdana,'Lucida Grande',sans-serif;
+    color: #4F4F4F;
 }
-#atndevrecom-toolbar-button:hover
-{
-  -moz-image-region: rect(24px 24px 48px  0px);
+
+#atndevrecom-popup-div table {
+	  -moz-border-radius-topleft: 20px;
+	  -moz-border-radius-topright: 20px;
+    -moz-box-shadow: 1px 1px 0 #DBDBDB;
+    background: none repeat scroll 0 0 #F9FAFA;
 }
-[iconsize="small"] #atndevrecom-toolbar-button
-{
-  -moz-image-region: rect( 0px 40px 16px 24px);
+
+#atndevrecom-popup-div table tbody tr:hover {
+    background-color: #DFDFDF;
+    cursor: pointer;
 }
-[iconsize="small"] #atndevrecom-toolbar-button:hover
-{
-  -moz-image-region: rect(24px 40px 40px 24px);
+
+#atndevrecom-popup-div table tr td {
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #EDEDED;
+    padding: 10px 15px;;
+}
+
+#atndevrecom-popup-div table tr.head td {
+    border-top: none;
+}
+
+#atndevrecom-popup-div table tr td.date {
+    border-right: 1px solid #EDEDED;
+}
+
+#atndevrecom-popup-div table tr td.title {
+    border-right: 1px solid #EDEDED;
+}
+
+#atndevrecom-popup-div table tr td.over {
+    background-color: #FFDFDF;
 }

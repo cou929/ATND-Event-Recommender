@@ -62,18 +62,22 @@ var atndevrecom = {
   constructPanel: function() {
     atndevrecom.clearPanel();
     atndevrecom.sortingArray.sort(atndevrecom.cmp);
-    var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><table>';
+
+    var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><table cellspacing="0" cellpadding="0" border="0">'
+               + '<thead><tr class="head"><th class="date-head">Date</th><th class="title-head">Title</th><th class="limit-head">Limit</th></tr></thead>'
+               + '<tbody>';
     for (var i=0; i<atndevrecom.sortingArray.length; i++) {
       var currentEvent = atndevrecom.events[atndevrecom.sortingArray[i].event_id];
       var day = atndevrecom.sortingArray[i].date;
-      Application.console.log(currentEvent.started_at + " " + day.getMonth());
+      var limit = currentEvent.limit ? currentEvent.limit : 'NA';
+      var limitClass = (limit != 'NA' && (currentEvent.accepted + currentEvent.waiting) > limit) ? 'over' : '';
       html += '<tr onclick="atndevrecom.openNewTab(\'' + currentEvent.event_url + '\')">'
-        + '<td>' + atndevrecom.monthString[day.getMonth()] + ' ' + day.getDate() + ' (' + atndevrecom.weekString[day.getDay()] + ')</td>'
-        + '<td>' + atndevrecom.escapeChars(currentEvent.title) + '</td>'
-        + '<td>' + (currentEvent.accepted + currentEvent.waiting) + ' / ' + currentEvent.limit + '</td>'
+        + '<td class="date">' + atndevrecom.monthString[day.getMonth()] + ' ' + day.getDate() + ' (' + atndevrecom.weekString[day.getDay()] + ')</td>'
+        + '<td class="title">' + atndevrecom.escapeChars(currentEvent.title) + '</td>'
+        + '<td class="limit ' + limitClass + '">' + (currentEvent.accepted + currentEvent.waiting) + ' / ' + limit + '</td>'
         + '</tr>';
     }
-    html += '</table></div>';
+    html += '</tbody></table></div>';
     var fragment = document.createRange().createContextualFragment(html);
     document.getElementById('atndevrecom-popup-div').appendChild(fragment);
   },
