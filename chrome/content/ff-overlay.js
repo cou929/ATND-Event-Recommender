@@ -1,6 +1,7 @@
 var atndevrecom = {
   oldUri: null,
   events: {},
+  sortingArray: [],
   isActive: false,
 
   // cache
@@ -58,10 +59,13 @@ var atndevrecom = {
 
   constructPanel: function() {
     atndevrecom.clearPanel();
+    atndevrecom.sortingArray.sort(atndevrecom.cmp);
     var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><ul>';
-    for (var i in atndevrecom.events)
-      html += '<li><span onclick="atndevrecom.openNewTab(\'' + atndevrecom.events[i].event_url + '\')">'
-        + atndevrecom.escapeChars(atndevrecom.events[i].title) + '</span></li>';
+    for (var i=0; i<atndevrecom.sortingArray.length; i++) {
+      var index = atndevrecom.sortingArray[i].event_id;
+      html += '<li><span onclick="atndevrecom.openNewTab(\'' + atndevrecom.events[index].event_url + '\')">'
+        + atndevrecom.escapeChars(atndevrecom.events[index].title) + '</span></li>';
+    }
     html += '</ul></div>';
     var fragment = document.createRange().createContextualFragment(html);
     document.getElementById('atndevrecom-popup-div').appendChild(fragment);
@@ -115,6 +119,7 @@ var atndevrecom = {
   //// extension specific functions
   checkCurrentUri: function(currentUri) {
     atndevrecom.clearEventList();
+    atndevrecom.clearPanel();
     var res = currentUri.match(/^http:\/\/atnd\.org\/events\/([0-9]+)/i);
     if (res) {
       atndevrecom.getUserList(res[1]);
@@ -165,6 +170,7 @@ var atndevrecom = {
               } else {
                 atndevrecom.events[res.events[j].event_id] = res.events[j];
                 atndevrecom.events[res.events[j].event_id].count = 1;
+                atndevrecom.sortingArray.push({'date': startDate, 'event_id': res.events[j].event_id});
               }
           }
         }
@@ -178,12 +184,17 @@ var atndevrecom = {
 
   clearEventList: function() {
     atndevrecom.events = {};
+    atndevrecom.sortingArray = [];
   },
 
   escapeChars: function(html) {
     var map = {"<":"&lt;", ">":"&gt;", "&":"&amp;", "'":"&apos;", "\"":"&quot;"};
     var replaceStr = function(s){ return map[s]; };
     return html.replace(/<|>|&|'|"/g, replaceStr);
+  },
+
+  cmp: function(a, b) {
+    return a.date > b.date;
   }
 };
 
