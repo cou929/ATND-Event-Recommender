@@ -3,6 +3,8 @@ var atndevrecom = {
   events: {},
   sortingArray: [],
   isActive: false,
+  monthString: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  weekString: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 
   // cache
   today: null,
@@ -60,13 +62,18 @@ var atndevrecom = {
   constructPanel: function() {
     atndevrecom.clearPanel();
     atndevrecom.sortingArray.sort(atndevrecom.cmp);
-    var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><ul>';
+    var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><table>';
     for (var i=0; i<atndevrecom.sortingArray.length; i++) {
-      var index = atndevrecom.sortingArray[i].event_id;
-      html += '<li><span onclick="atndevrecom.openNewTab(\'' + atndevrecom.events[index].event_url + '\')">'
-        + atndevrecom.escapeChars(atndevrecom.events[index].title) + '</span></li>';
+      var currentEvent = atndevrecom.events[atndevrecom.sortingArray[i].event_id];
+      var day = atndevrecom.sortingArray[i].date;
+      Application.console.log(currentEvent.started_at + " " + day.getMonth());
+      html += '<tr onclick="atndevrecom.openNewTab(\'' + currentEvent.event_url + '\')">'
+        + '<td>' + atndevrecom.monthString[day.getMonth()] + ' ' + day.getDate() + ' (' + atndevrecom.weekString[day.getDay()] + ')</td>'
+        + '<td>' + atndevrecom.escapeChars(currentEvent.title) + '</td>'
+        + '<td>' + (currentEvent.accepted + currentEvent.waiting) + ' / ' + currentEvent.limit + '</td>'
+        + '</tr>';
     }
-    html += '</ul></div>';
+    html += '</table></div>';
     var fragment = document.createRange().createContextualFragment(html);
     document.getElementById('atndevrecom-popup-div').appendChild(fragment);
   },
