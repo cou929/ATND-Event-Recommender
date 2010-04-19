@@ -70,7 +70,7 @@ var atndevrecom = {
       var currentEvent = atndevrecom.events[atndevrecom.sortingArray[i].event_id];
       var day = atndevrecom.sortingArray[i].date;
       var limit = currentEvent.limit ? currentEvent.limit : 'NA';
-      var limitClass = (limit != 'NA' && (currentEvent.accepted + currentEvent.waiting) > limit) ? 'over' : '';
+      var limitClass = (limit != 'NA' && (currentEvent.accepted + currentEvent.waiting) < limit) ? 'under' : '';
       html += '<tr onclick="atndevrecom.openNewTab(\'' + currentEvent.event_url + '\')">'
         + '<td class="date">' + atndevrecom.monthString[day.getMonth()] + ' ' + day.getDate() + ' (' + atndevrecom.weekString[day.getDay()] + ')</td>'
         + '<td class="title">' + atndevrecom.escapeChars(currentEvent.title) + '</td>'

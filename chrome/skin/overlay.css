@@ -27,7 +27,7 @@
 #atndevrecom-popup-div table tr td {
     border-top: 1px solid #FFFFFF;
     border-bottom: 1px solid #EDEDED;
-    padding: 10px 15px;;
+    padding: 7px 15px;
 }
 
 #atndevrecom-popup-div table tr.head td {
@@ -42,6 +42,6 @@
     border-right: 1px solid #EDEDED;
 }
 
-#atndevrecom-popup-div table tr td.over {
-    background-color: #FFDFDF;
+#atndevrecom-popup-div table tr td.under {
+    background-color: #DFFFE0;
 }
