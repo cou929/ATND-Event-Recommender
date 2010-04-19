@@ -56,7 +56,7 @@ var atndevrecom = {
     var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><ul>';
     for (var i in atndevrecom.events)
       html += '<li><span onclick="atndevrecom.openNewTab(\'' + atndevrecom.events[i].event_url + '\')">'
-        + atndevrecom.events[i].title + '</span></li>';
+        + atndevrecom.escapeChars(atndevrecom.events[i].title) + '</span></li>';
     html += '</ul></div>';
     var fragment = document.createRange().createContextualFragment(html);
     document.getElementById('atndevrecom-popup-div').appendChild(fragment);
@@ -132,7 +132,7 @@ var atndevrecom = {
 
   getEventList: function(users, originalEventId) {
     var url = "http://api.atnd.org/events/?format=json&count=100&user_id=";
-    for (var i=0; i<5; i++) {
+    for (var i=0; i<users.length; i++) {
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = onready(xhr, users[i]);
       xhr.open('GET', url + users[i], true);
@@ -160,6 +160,12 @@ var atndevrecom = {
 
   clearEventList: function() {
     atndevrecom.events = {};
+  },
+
+  escapeChars: function(html) {
+    var map = {"<":"&lt;", ">":"&gt;", "&":"&amp;", "'":"&apos;", "\"":"&quot;"};
+    var replaceStr = function(s){ return map[s]; };
+    return html.replace(/<|>|&|'|"/g, replaceStr);
   }
 };
 
