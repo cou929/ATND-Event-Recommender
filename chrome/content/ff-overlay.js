@@ -8,6 +8,7 @@ var atndevrecom = {
   statusbar: null,
   activeIconImage: null,
   inactiveIconImage: null,
+  loadingImage: null,
     
   //// firefox specific functions
   init: function() {
@@ -16,6 +17,7 @@ var atndevrecom = {
     atndevrecom.statusbar = document.getElementById('status-bar');
     atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png');
     atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
+    atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/loading.gif');
   },
 
   uninit: function() {
@@ -50,9 +52,12 @@ var atndevrecom = {
   },
 
   show: function() {
-    atndevrecom.clearPanel();
     if (!atndevrecom.isActive) return;
+    document.getElementById('atndevrecom-popup-panel').openPopup(document.getElementById('atndevrecom-icon'), 'before_end', -1, -1, false);
+  },
 
+  constructPanel: function() {
+    atndevrecom.clearPanel();
     var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><ul>';
     for (var i in atndevrecom.events)
       html += '<li><span onclick="atndevrecom.openNewTab(\'' + atndevrecom.events[i].event_url + '\')">'
@@ -60,7 +65,6 @@ var atndevrecom = {
     html += '</ul></div>';
     var fragment = document.createRange().createContextualFragment(html);
     document.getElementById('atndevrecom-popup-div').appendChild(fragment);
-    document.getElementById('atndevrecom-popup-panel').openPopup(document.getElementById('atndevrecom-icon'), 'before_end', -1, -1, false);
   },
 
   clearPanel: function() {
@@ -75,13 +79,21 @@ var atndevrecom = {
   },
 
   activate: function() {
+    atndevrecom.isActive = true;
     atndevrecom.removeIcon();
     atndevrecom.statusbar.appendChild(atndevrecom.activeIconImage);
   },
 
   deactivate: function() {
+    atndevrecom.isActive = false;
     atndevrecom.removeIcon();
     atndevrecom.statusbar.appendChild(atndevrecom.inactiveIconImage);
+  },
+
+  drawLoading: function() {
+    atndevrecom.isActive = false;
+    atndevrecom.removeIcon();
+    atndevrecom.statusbar.appendChild(atndevrecom.loadingImage);
   },
 
   constructIconImage: function(src) {
@@ -107,10 +119,8 @@ var atndevrecom = {
     if (res) {
       atndevrecom.getUserList(res[1]);
       atndevrecom.activate();
-      atndevrecom.isActive = true;
     } else {
       atndevrecom.deactivate();
-      atndevrecom.isActive = false;
     }
   },
 
@@ -132,14 +142,18 @@ var atndevrecom = {
 
   getEventList: function(users, originalEventId) {
     var url = "http://api.atnd.org/events/?format=json&count=100&user_id=";
-    for (var i=0; i<users.length; i++) {
+    var userNum = users.length;
+
+    atndevrecom.drawLoading();
+
+    for (var i=0; i<userNum; i++) {
       var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = onready(xhr, users[i]);
+      xhr.onload= onload(xhr, users[i]);
       xhr.open('GET', url + users[i], true);
       xhr.send(null); 
     }
 
-    function onready(xhr, user) {
+    function onload(xhr, user) {
       return function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
           var res = JSON.parse(xhr.responseText);
@@ -153,6 +167,10 @@ var atndevrecom = {
                 atndevrecom.events[res.events[j].event_id].count = 1;
               }
           }
+        }
+        if (--userNum == 0) {
+          atndevrecom.activate();
+          atndevrecom.constructPanel();
         }
       };
     };
