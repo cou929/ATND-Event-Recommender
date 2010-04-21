@@ -5,6 +5,7 @@ var atndevrecom = {
   isActive: false,
   monthString: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   weekString: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  titleLenght: 30,
 
   // cache
   today: null,
@@ -73,7 +74,7 @@ var atndevrecom = {
       var limitClass = (limit != 'NA' && (currentEvent.accepted + currentEvent.waiting) < limit) ? 'under' : '';
       html += '<tr onclick="atndevrecom.openNewTab(\'' + currentEvent.event_url + '\')">'
         + '<td class="date">' + atndevrecom.monthString[day.getMonth()] + ' ' + day.getDate() + ' (' + atndevrecom.weekString[day.getDay()] + ')</td>'
-        + '<td class="title">' + atndevrecom.escapeChars(currentEvent.title) + '</td>'
+        + '<td class="title">' + atndevrecom.shortenString(atndevrecom.escapeChars(currentEvent.title)) + '</td>'
         + '<td class="limit ' + limitClass + '">' + (currentEvent.accepted + currentEvent.waiting) + ' / ' + limit + '</td>'
         + '</tr>';
     }
@@ -206,6 +207,12 @@ var atndevrecom = {
 
   cmp: function(a, b) {
     return a.date > b.date;
+  },
+
+  shortenString: function(str) {
+    if (str.length > atndevrecom.titleLenght)
+      return str.substr(0, atndevrecom.titleLenght) + "...";
+    return str;
   }
 };
 

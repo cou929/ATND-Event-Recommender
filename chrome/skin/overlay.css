@@ -9,7 +9,7 @@
 	  -moz-border-radius-topleft: 20px;
 	  -moz-border-radius-topright: 20px;
     font: bold 11px/20px Verdana,'Lucida Grande',sans-serif;
-    color: #4F4F4F;
+    color: #333333;
 }
 
 #atndevrecom-popup-div table {
@@ -17,6 +17,13 @@
 	  -moz-border-radius-topright: 20px;
     -moz-box-shadow: 1px 1px 0 #DBDBDB;
     background: none repeat scroll 0 0 #F9FAFA;
+}
+
+#atndevrecom-popup-div table tr th {
+    color: #627587;
+    text-align: left;
+    font-weight: normal;
+    padding-left: 15px;
 }
 
 #atndevrecom-popup-div table tbody tr:hover {
@@ -27,7 +34,7 @@
 #atndevrecom-popup-div table tr td {
     border-top: 1px solid #FFFFFF;
     border-bottom: 1px solid #EDEDED;
-    padding: 7px 15px;
+    padding: 4px 15px;
 }
 
 #atndevrecom-popup-div table tr.head td {
