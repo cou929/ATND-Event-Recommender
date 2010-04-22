@@ -21,7 +21,7 @@ var atndevrecom = {
     atndevrecom.statusbar = document.getElementById('status-bar');
     atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png');
     atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
-    atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/loading.gif');
+    atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://global/skin/icons/loading_16.png');
   },
 
   uninit: function() {
