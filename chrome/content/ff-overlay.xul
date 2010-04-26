@@ -10,8 +10,10 @@
 
   <popupset>
     <panel id="atndevrecom-popup-panel">
-      <html:div id="atndevrecom-popup-div">
-      </html:div>
+      <hbox id="atndevrecom-popup-hbox">
+        <html:div id="atndevrecom-popup-div">
+        </html:div>
+      </hbox>
     </panel>
   </popupset>
 

@@ -1,6 +1,9 @@
-#atndevrecom-popup-div {
+#atndevrecom-popup-hbox {
     font: bold 11px/20px Verdana,'Lucida Grande',sans-serif;
     color: #333333;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 }
 
 #atndevrecom-popup-div table {
