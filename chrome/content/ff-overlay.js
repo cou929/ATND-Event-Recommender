@@ -13,6 +13,9 @@ var atndevrecom = {
   activeIconImage: null,
   inactiveIconImage: null,
   loadingImage: null,
+  LIB: {},
+  jQuery: null,
+  $: null,
     
   //// firefox specific functions
   init: function() {
@@ -22,6 +25,11 @@ var atndevrecom = {
     atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png');
     atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
     atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://global/skin/icons/loading_16.png');
+
+    // load jquery
+	  Components.utils.import("resource://atndevrecom/jquery.js", atndevrecom.LIB);
+	  atndevrecom.jQuery = atndevrecom.LIB.jQuery;
+	  atndevrecom.$ = atndevrecom.jQuery;
   },
 
   uninit: function() {
@@ -86,7 +94,7 @@ var atndevrecom = {
   clearPanel: function() {
     var div = document.getElementById('atndevrecom-popup-div');
     while (div.firstChild)
-      div.removeChild(div.firstChild);      
+      div.removeChild(div.firstChild);
   },
 
   openNewTab: function(uri) {
@@ -143,18 +151,18 @@ var atndevrecom = {
 
   getUserList: function(eventId) {
     var url = "http://api.atnd.org/events/users/?format=json&count=100&event_id=" + eventId;
-    var xhr = new XMLHttpRequest();
     var users = [];
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        var res = JSON.parse(xhr.responseText);
-        for (var i=0; i<res.events[0].users.length; i++)
-          users.push(res.events[0].users[i].user_id);
-        atndevrecom.getEventList(users, eventId);
-      }
-    };
-    xhr.open('GET', url, true);
-    xhr.send(null);
+
+    atndevrecom.$.ajax({
+             type: "GET",
+             url: url,
+             dataType: "json",
+             success: function(res) {
+               for (var i=0; i<res.events[0].users.length; i++)
+                 users.push(res.events[0].users[i].user_id);
+               atndevrecom.getEventList(users, eventId);
+             }
+           });
   },
 
   getEventList: function(users, originalEventId) {
