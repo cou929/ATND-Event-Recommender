@@ -1,14 +1,14 @@
-#atndevrecom-popup-hbox {
-    font: bold 11px/20px Verdana,'Lucida Grande',sans-serif;
-    color: #333333;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
+#atndevrecom-popup-inner {
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-#atndevrecom-popup-div table {
+#atndevrecom-popup-div {
     -moz-box-shadow: 1px 1px 0 #DBDBDB;
+    font: bold 11px/20px Verdana,'Lucida Grande',sans-serif;
+    color: #333333;
     background: none repeat scroll 0 0 #F9FAFA;
+    display: block;
 }
 
 #atndevrecom-popup-div table thead tr {

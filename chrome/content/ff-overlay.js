@@ -16,7 +16,7 @@ var atndevrecom = {
   LIB: {},
   jQuery: null,
   $: null,
-    
+  
   //// firefox specific functions
   init: function() {
     gBrowser.addProgressListener(atndevrecom.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
@@ -28,7 +28,7 @@ var atndevrecom = {
 
     // load jquery
 	  Components.utils.import("resource://atndevrecom/jquery.js", atndevrecom.LIB);
-	  atndevrecom.jQuery = atndevrecom.LIB.jQuery;
+   	atndevrecom.jQuery = atndevrecom.LIB.jQuery;
 	  atndevrecom.$ = atndevrecom.jQuery;
   },
 
@@ -65,7 +65,7 @@ var atndevrecom = {
 
   show: function() {
     if (!atndevrecom.isActive) return;
-    document.getElementById('atndevrecom-popup-panel').openPopup(document.getElementById('atndevrecom-icon'), 'before_end', -1, -1, false);
+    document.getElementById('atndevrecom-popup-panel').openPopup(document.getElementById('status-bar'), 'before_end', -20, 0, false, false);
   },
 
   constructPanel: function() {
@@ -73,8 +73,8 @@ var atndevrecom = {
     atndevrecom.sortingArray.sort(atndevrecom.cmp);
 
     var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><table cellspacing="0" cellpadding="0" border="0">'
-               + '<thead><tr class="head"><th class="date-head">Date</th><th class="title-head">Title</th><th class="limit-head">Limit</th></tr></thead>'
-               + '<tbody>';
+      + '<thead><tr class="head"><th class="date-head">Date</th><th class="title-head">Title</th><th class="limit-head">Limit</th></tr></thead>'
+      + '<tbody>';
     for (var i=0; i<atndevrecom.sortingArray.length; i++) {
       var currentEvent = atndevrecom.events[atndevrecom.sortingArray[i].event_id];
       var day = atndevrecom.sortingArray[i].date;
@@ -154,15 +154,15 @@ var atndevrecom = {
     var users = [];
 
     atndevrecom.$.ajax({
-             type: "GET",
-             url: url,
-             dataType: "json",
-             success: function(res) {
-               for (var i=0; i<res.events[0].users.length; i++)
-                 users.push(res.events[0].users[i].user_id);
-               atndevrecom.getEventList(users, eventId);
-             }
-           });
+                         type: "GET",
+                         url: url,
+                         dataType: "json",
+                         success: function(res) {
+                           for (var i=0; i<res.events[0].users.length; i++)
+                             users.push(res.events[0].users[i].user_id);
+                           atndevrecom.getEventList(users, eventId);
+                         }
+                       });
   },
 
   getEventList: function(users, originalEventId) {
