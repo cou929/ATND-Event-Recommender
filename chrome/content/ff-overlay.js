@@ -143,14 +143,10 @@ var atndevrecom = {
 
   //// extension specific functions
   checkCurrentUri: function(currentUri) {
-    atndevrecom.clearEventList();
-    atndevrecom.clearPanel();
     var res = currentUri.match(/^http:\/\/atnd\.org\/events\/([0-9]+)/i);
     if (res) {
       atndevrecom.getUserList(res[1]);
       atndevrecom.activate();
-    } else {
-      atndevrecom.deactivate();
     }
   },
 
@@ -185,11 +181,17 @@ var atndevrecom = {
 
     function onload(xhr, user) {
       return function() {
+        if (--userNum == 0) {
+          atndevrecom.activate();
+          atndevrecom.constructPanel();
+        }
         if (xhr.readyState == 4 && xhr.status == 200) {
           var res = JSON.parse(xhr.responseText);
           for (var j=0; j<res.events.length; j++) {
             var startDate = new Date(res.events[j].started_at);
-            if (atndevrecom.today < startDate && res.events[j].event_id != originalEventId)
+            if (atndevrecom.today < startDate && 
+                Math.abs(startDate - atndevrecom.today) < (60 * 60 * 24 * 365 * 1000) &&
+                res.events[j].event_id != originalEventId)
               if (atndevrecom.events[res.events[j].event_id]) {
                 atndevrecom.events[res.events[j].event_id].count += 1;
               } else {
@@ -198,10 +200,6 @@ var atndevrecom = {
                 atndevrecom.sortingArray.push({'date': startDate, 'event_id': res.events[j].event_id});
               }
           }
-        }
-        if (--userNum == 0) {
-          atndevrecom.activate();
-          atndevrecom.constructPanel();
         }
       };
     };
