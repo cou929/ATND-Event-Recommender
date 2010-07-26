@@ -56,7 +56,6 @@ var atndevrecom = {
   },
 
   processNewUrl: function(aUri) {
-    atndevrecom.clearEventList();
     atndevrecom.clearPanel();
     atndevrecom.deactivate();
 
@@ -207,11 +206,6 @@ var atndevrecom = {
         }
       };
     };
-  },
-
-  clearEventList: function() {
-    atndevrecom.events = {};
-    atndevrecom.sortingArray = [];
   },
 
   escapeChars: function(html) {
