@@ -57,8 +57,13 @@ var atndevrecom = {
   },
 
   processNewUrl: function(aUri) {
-    if (aUri.spec == atndevrecom.oldUrl)
+    atndevrecom.clearEventList();
+    atndevrecom.clearPanel();
+    atndevrecom.deactivate();
+
+    if (!aUri || aUri.spec == atndevrecom.oldUrl)
       return;
+
     atndevrecom.checkCurrentUri(gBrowser.selectedBrowser.contentDocument.location.href);
     atndevrecom.oldUrl = aUri.spec; 
   },
