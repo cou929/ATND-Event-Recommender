@@ -15,7 +15,7 @@ var atndevrecom = {
   LIB: {},
   jQuery: null,
   $: null,
-  
+
   //// firefox specific functions
   init: function() {
     gBrowser.addProgressListener(atndevrecom.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
@@ -63,7 +63,7 @@ var atndevrecom = {
       return;
 
     atndevrecom.checkCurrentUri(gBrowser.selectedBrowser.contentDocument.location.href);
-    atndevrecom.oldUrl = aUri.spec; 
+    atndevrecom.oldUrl = aUri.spec;
   },
 
   show: function() {
@@ -144,9 +144,14 @@ var atndevrecom = {
   checkCurrentUri: function(currentUri) {
     var res = currentUri.match(/^http:\/\/atnd\.org\/events\/([0-9]+)/i);
     if (res) {
-      atndevrecom.getUserList(res[1]);
-      atndevrecom.activate();
-    }
+      atndevrecom.drawLoading();
+      if (atndevrecom.eventStore[res[1]]) {
+        atndevrecom.activate();
+        atndevrecom.constructPanel(res[1]);
+      } else {
+        atndevrecom.getUserList(res[1]);
+      }
+           }
   },
 
   getUserList: function(eventId) {
@@ -167,19 +172,17 @@ var atndevrecom = {
 
   getEventList: function(users, originalEventId) {
     var url = "http://api.atnd.org/events/?format=json&count=100&user_id=";
-    var userNum = users.length;
     atndevrecom.eventStore[originalEventId] = {};
     var store = atndevrecom.eventStore[originalEventId];
     store.events = {};
     store.sortingArray = [];
+    store.userNum = users.length;
 
-    atndevrecom.drawLoading();
-
-    for (var i=0; i<userNum; i++) {
+    for (var i=0; i<store.userNum; i++) {
       var xhr = new XMLHttpRequest();
       xhr.onload= onload(xhr, users[i]);
       xhr.open('GET', url + users[i], true);
-      xhr.send(null); 
+      xhr.send(null);
     }
 
     function onload(xhr, user) {
@@ -188,7 +191,7 @@ var atndevrecom = {
           var res = JSON.parse(xhr.responseText);
           for (var j=0; j<res.events.length; j++) {
             var startDate = new Date(res.events[j].started_at);
-            if (atndevrecom.today < startDate && 
+            if (atndevrecom.today < startDate &&
                 Math.abs(startDate - atndevrecom.today) < (60 * 60 * 24 * 365 * 1000) &&
                 res.events[j].event_id != originalEventId)
               if (store.events[res.events[j].event_id]) {
@@ -200,7 +203,7 @@ var atndevrecom = {
               }
           }
         }
-        if (--userNum == 0) {
+        if (--store.userNum == 0) {
           atndevrecom.activate();
           atndevrecom.constructPanel(originalEventId);
         }
