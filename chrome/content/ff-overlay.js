@@ -7,6 +7,7 @@ var atndevrecom = {
   eventStore: {},
 
   // cache
+  bundle: null,
   today: null,
   statusbar: null,
   activeIconImage: null,
@@ -19,9 +20,10 @@ var atndevrecom = {
   //// firefox specific functions
   init: function() {
     gBrowser.addProgressListener(atndevrecom.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+    atndevrecom.bundle = document.getElementById('atndevrecom-strings');
     atndevrecom.today = new Date();
     atndevrecom.statusbar = document.getElementById('status-bar');
-    atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png');
+    atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png', true);
     atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
     atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://global/skin/icons/loading_16.png');
 
@@ -124,12 +126,13 @@ var atndevrecom = {
     atndevrecom.statusbar.appendChild(atndevrecom.loadingImage);
   },
 
-  constructIconImage: function(src) {
+  constructIconImage: function(src, isActive) {
     var iconImage = document.createElement('image');
     iconImage.setAttribute('src', src);
     iconImage.setAttribute('id', 'atndevrecom-icon');
     iconImage.setAttribute('onclick', "atndevrecom.show()");
-    iconImage.setAttribute('tooltiptext', 'fix me later');
+    if (isActive)
+      iconImage.setAttribute('tooltiptext', atndevrecom.bundle.getString('tooltiptext'));
     return iconImage;
   },
 
