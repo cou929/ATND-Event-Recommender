@@ -1,6 +1,7 @@
 content   atndevrecom                 chrome/content/
 skin      atndevrecom   classic/1.0   chrome/skin/
 locale    atndevrecom   en-US         chrome/locale/en-US/
+locale    atndevrecom   ja            chrome/locale/ja/
 resource  atndevrecom                 modules/
 
 overlay   chrome://browser/content/browser.xul   chrome://atndevrecom/content/ff-overlay.xul
