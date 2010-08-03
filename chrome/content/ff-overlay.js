@@ -1,10 +1,11 @@
 var atndevrecom = {
-  oldUri: null,
+  oldUrl: null,
   isActive: false,
   monthString: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   weekString: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   titleLenght: 30,
   eventStore: {},
+  urlRegexpPattern: /^http:\/\/atnd\.org\/events\/([0-9]+)/i,
 
   // cache
   bundle: null,
@@ -58,14 +59,23 @@ var atndevrecom = {
   },
 
   processNewUrl: function(aUri) {
-    atndevrecom.clearPanel();
-    atndevrecom.deactivate();
+    var currentUrl = gBrowser.selectedBrowser.contentDocument.location.href;
+    var res = atndevrecom.isATNDEventPage(currentUrl);
 
-    if (!aUri || aUri.spec == atndevrecom.oldUrl)
-      return;
+    if (res) {
+      if (currentUrl == atndevrecom.oldUrl) {
+        return;        
+      } else {
+        atndevrecom.clearPanel();
+        atndevrecom.deactivate();
+        atndevrecom.loadEvents(res[1]);
+      }
+    } else {
+      atndevrecom.clearPanel();
+      atndevrecom.deactivate();
+    }
 
-    atndevrecom.checkCurrentUri(gBrowser.selectedBrowser.contentDocument.location.href);
-    atndevrecom.oldUrl = aUri.spec;
+    atndevrecom.oldUrl = currentUrl;
   },
 
   show: function() {
@@ -143,18 +153,19 @@ var atndevrecom = {
     }
   },
 
+  isATNDEventPage: function(currentUri) {
+    return currentUri.match(atndevrecom.urlRegexpPattern);
+  },
+
   //// extension specific functions
-  checkCurrentUri: function(currentUri) {
-    var res = currentUri.match(/^http:\/\/atnd\.org\/events\/([0-9]+)/i);
-    if (res) {
-      atndevrecom.drawLoading();
-      if (atndevrecom.eventStore[res[1]]) {
-        atndevrecom.activate();
-        atndevrecom.constructPanel(res[1]);
-      } else {
-        atndevrecom.getUserList(res[1]);
-      }
-           }
+  loadEvents: function(eventId) {
+    atndevrecom.drawLoading();
+    if (atndevrecom.eventStore[eventId]) {
+      atndevrecom.activate();
+      atndevrecom.constructPanel(eventId);
+    } else {
+      atndevrecom.getUserList(eventId);
+    }
   },
 
   getUserList: function(eventId) {
