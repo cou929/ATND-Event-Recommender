@@ -62,18 +62,14 @@ var atndevrecom = {
     var currentUrl = gBrowser.selectedBrowser.contentDocument.location.href;
     var res = atndevrecom.isATNDEventPage(currentUrl);
 
-    if (res) {
-      if (currentUrl == atndevrecom.oldUrl) {
-        return;        
-      } else {
-        atndevrecom.clearPanel();
-        atndevrecom.deactivate();
-        atndevrecom.loadEvents(res[1]);
-      }
-    } else {
-      atndevrecom.clearPanel();
-      atndevrecom.deactivate();
-    }
+    if (res && currentUrl == atndevrecom.oldUrl)
+      return;
+
+    atndevrecom.clearPanel();
+    atndevrecom.deactivate();
+
+    if (currentUrl != atndevrecom.oldUrl)
+      atndevrecom.loadEvents(res[1]);
 
     atndevrecom.oldUrl = currentUrl;
   },
