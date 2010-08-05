@@ -62,7 +62,7 @@ var atndevrecom = {
     var currentUrl = gBrowser.selectedBrowser.contentDocument.location.href;
     var res = atndevrecom.isATNDEventPage(currentUrl);
 
-    if (res && currentUrl == atndevrecom.oldUrl)
+    if (!res || res && currentUrl == atndevrecom.oldUrl)
       return;
 
     atndevrecom.clearPanel();
@@ -80,8 +80,14 @@ var atndevrecom = {
   },
 
   constructPanel: function(originalEventId) {
-    atndevrecom.clearPanel();
     var store = atndevrecom.eventStore[originalEventId];
+    atndevrecom.clearPanel();
+
+    if (store === null || store.sortingArray.length <= 0) {
+      atndevrecom.deactivate();
+      return;
+    }
+
     store.sortingArray.sort(atndevrecom.cmp);
 
     var html = '<div id="atndevrecom-results" xmlns="http://www.w3.org/1999/xhtml"><table cellspacing="0" cellpadding="0" border="0">'
@@ -173,6 +179,12 @@ var atndevrecom = {
                          url: url,
                          dataType: "json",
                          success: function(res) {
+                           if (!res.events[0] || res.events[0].users.length <= 0) {
+                             atndevrecom.clearPanel();
+                             atndevrecom.deactivate();
+                             atndevrecom.eventStore[eventId] = null;
+                             return;
+                           }
                            for (var i=0; i<res.events[0].users.length; i++)
                              users.push(res.events[0].users[i].user_id);
                            atndevrecom.getEventList(users, eventId);
@@ -190,7 +202,7 @@ var atndevrecom = {
 
     for (var i=0; i<store.userNum; i++) {
       var xhr = new XMLHttpRequest();
-      xhr.onload= onload(xhr, users[i]);
+      xhr.onload = onload(xhr, users[i]);
       xhr.open('GET', url + users[i], true);
       xhr.send(null);
     }
