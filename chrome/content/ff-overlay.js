@@ -16,7 +16,6 @@ var atndevrecom = {
   loadingImage: null,
   LIB: {},
   jQuery: null,
-  $: null,
 
   //// firefox specific functions
   init: function() {
@@ -27,11 +26,6 @@ var atndevrecom = {
     atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png', true);
     atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
     atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://global/skin/icons/loading_16.png');
-
-    // load jquery
-	  Components.utils.import("resource://atndevrecom/jquery.js", atndevrecom.LIB);
-   	atndevrecom.jQuery = atndevrecom.LIB.jQuery;
-	  atndevrecom.$ = atndevrecom.jQuery;
   },
 
   uninit: function() {
@@ -174,22 +168,27 @@ var atndevrecom = {
     var url = "http://api.atnd.org/events/users/?format=json&count=100&event_id=" + eventId;
     var users = [];
 
-    atndevrecom.$.ajax({
-                         type: "GET",
-                         url: url,
-                         dataType: "json",
-                         success: function(res) {
-                           if (!res.events[0] || res.events[0].users.length <= 0) {
-                             atndevrecom.clearPanel();
-                             atndevrecom.deactivate();
-                             atndevrecom.eventStore[eventId] = null;
-                             return;
-                           }
-                           for (var i=0; i<res.events[0].users.length; i++)
-                             users.push(res.events[0].users[i].user_id);
-                           atndevrecom.getEventList(users, eventId);
-                         }
-                       });
+    var xhr = new XMLHttpRequest();
+    xhr.onload = onload(xhr);
+    xhr.open('GET', url, true);
+    xhr.send(null);
+
+    function onload(res) {
+      return function() {
+        if (res.readyState == 4 && res.status == 200) {
+          var json = JSON.parse(res.responseText);
+          if (!json.events[0] || json.events[0].users.length <= 0) {
+            atndevrecom.clearPanel();
+            atndevrecom.deactivate();
+            atndevrecom.eventStore[eventId] = null;
+            return;
+          }
+          for (var i=0; i<json.events[0].users.length; i++)
+            users.push(json.events[0].users[i].user_id);
+          atndevrecom.getEventList(users, eventId);
+        }
+      };
+    }
   },
 
   getEventList: function(users, originalEventId) {
