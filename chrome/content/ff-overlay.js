@@ -53,19 +53,24 @@ var atndevrecom = {
   },
 
   processNewUrl: function(aUri) {
-    var currentUrl = gBrowser.selectedBrowser.contentDocument.location.href;
+    var currentUrl = aUri.spec;
+    var old = atndevrecom.oldUrl;
+    atndevrecom.oldUrl = currentUrl;
+
     var res = atndevrecom.isATNDEventPage(currentUrl);
 
-    if (!res || res && currentUrl == atndevrecom.oldUrl)
+    if (res && currentUrl == old) {
+      return;      
+    } else {
+      atndevrecom.clearPanel();
+      atndevrecom.deactivate(); 
+    }
+
+    if (!res)
       return;
 
-    atndevrecom.clearPanel();
-    atndevrecom.deactivate();
-
-    if (currentUrl != atndevrecom.oldUrl)
+    if (currentUrl != old)
       atndevrecom.loadEvents(res[1]);
-
-    atndevrecom.oldUrl = currentUrl;
   },
 
   show: function() {
