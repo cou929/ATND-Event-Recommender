@@ -250,3 +250,4 @@ var atndevrecom = {
 };
 
 window.addEventListener("load", atndevrecom.init, false);
+window.addEventListener("unload", atndevrecom.uninit, false);
