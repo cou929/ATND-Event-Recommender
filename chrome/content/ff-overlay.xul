@@ -8,6 +8,14 @@
     <stringbundle id="atndevrecom-strings" src="chrome://atndevrecom/locale/overlay.properties"/>
   </stringbundleset>
 
+  <statusbar id="status-bar">
+    <statusbarpanel id="atndevrecom-statusbar-panel">
+      <image src="chrome://atndevrecom/skin/images/icon16_inactive.png" 
+             id="atndevrecom-icon" 
+             onclick="atndevrecom.show()" />
+    </statusbarpanel>
+  </statusbar>
+
   <popupset>
     <panel id="atndevrecom-popup-panel">
       <vbox id="atndevrecom-popup-inner" flex="1">

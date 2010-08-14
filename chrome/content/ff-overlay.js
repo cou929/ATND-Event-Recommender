@@ -11,9 +11,9 @@ var atndevrecom = {
   bundle: null,
   today: null,
   statusbar: null,
-  activeIconImage: null,
-  inactiveIconImage: null,
-  loadingImage: null,
+  activeIconImage: 'chrome://atndevrecom/skin/images/icon16.png',
+  inactiveIconImage: 'chrome://atndevrecom/skin/images/icon16_inactive.png',
+  loadingImage: 'chrome://global/skin/icons/loading_16.png',
   LIB: {},
   jQuery: null,
 
@@ -22,10 +22,7 @@ var atndevrecom = {
     gBrowser.addProgressListener(atndevrecom.urlBarListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
     atndevrecom.bundle = document.getElementById('atndevrecom-strings');
     atndevrecom.today = new Date();
-    atndevrecom.statusbar = document.getElementById('status-bar');
-    atndevrecom.activeIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16.png', true);
-    atndevrecom.inactiveIconImage = atndevrecom.constructIconImage('chrome://atndevrecom/skin/images/icon16_inactive.png');
-    atndevrecom.loadingImage = atndevrecom.constructIconImage('chrome://global/skin/icons/loading_16.png');
+    atndevrecom.statusbar = document.getElementById('atndevrecom-statusbar-panel');
   },
 
   uninit: function() {
@@ -121,37 +118,21 @@ var atndevrecom = {
 
   activate: function() {
     atndevrecom.isActive = true;
-    atndevrecom.removeIcon();
-    atndevrecom.statusbar.appendChild(atndevrecom.activeIconImage);
+    var target = document.getElementById('atndevrecom-icon');
+    target.setAttribute('src', atndevrecom.activeIconImage);
+    target.setAttribute('tooltiptext', atndevrecom.bundle.getString('tooltiptext'));
   },
 
   deactivate: function() {
     atndevrecom.isActive = false;
-    atndevrecom.removeIcon();
-    atndevrecom.statusbar.appendChild(atndevrecom.inactiveIconImage);
+    var target = document.getElementById('atndevrecom-icon');
+    target.setAttribute('src', atndevrecom.inactiveIconImage);
   },
 
   drawLoading: function() {
     atndevrecom.isActive = false;
-    atndevrecom.removeIcon();
-    atndevrecom.statusbar.appendChild(atndevrecom.loadingImage);
-  },
-
-  constructIconImage: function(src, isActive) {
-    var iconImage = document.createElement('image');
-    iconImage.setAttribute('src', src);
-    iconImage.setAttribute('id', 'atndevrecom-icon');
-    iconImage.setAttribute('onclick', "atndevrecom.show()");
-    if (isActive)
-      iconImage.setAttribute('tooltiptext', atndevrecom.bundle.getString('tooltiptext'));
-    return iconImage;
-  },
-
-  removeIcon: function() {
-    var statusbarIconImage = document.getElementById('atndevrecom-icon');
-    if (statusbarIconImage) {
-      atndevrecom.statusbar.removeChild(statusbarIconImage);
-    }
+    var target = document.getElementById('atndevrecom-icon');
+    target.setAttribute('src', atndevrecom.loadingImage);
   },
 
   isATNDEventPage: function(currentUri) {
